@@ -1,4 +1,6 @@
 {
     "default_webhook_url": "https://example.com/webhook",
-    "enable_debug_logs": true
+    "enable_debug_logs": true,
+    "base_url": "http://localhost:8188",
+    "output_dir": "output"
 }
