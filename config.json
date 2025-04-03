@@ -1,0 +1,4 @@
+{
+    "default_webhook_url": "https://example.com/webhook",
+    "enable_debug_logs": true
+}
