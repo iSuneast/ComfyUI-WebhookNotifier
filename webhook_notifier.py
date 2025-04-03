@@ -11,31 +11,22 @@ class WebhookNotifierNode:
                 "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {
-                "workflow_name": ("STRING", {"default": "默认工作流"}),
                 "additional_info": ("STRING", {"default": "{}", "multiline": True})
             },
             "hidden": {
+                "unique_id": "UNIQUE_ID",
+                "prompt": "PROMPT", 
                 "extra_pnginfo": "EXTRA_PNGINFO"
             }
         }
 
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("images",)
+    RETURN_TYPES = ()
+    RETURN_NAMES = ()
     FUNCTION = "notify"
     CATEGORY = "utils"
 
-    def notify(self, images, webhook_url, workflow_name="默认工作流", additional_info="{}", extra_pnginfo=None):
+    def notify(self, images, webhook_url, additional_info="{}", extra_pnginfo=None, unique_id=None, prompt=None):
         try:
-            # 从ComfyUI获取prompt_id (client_id)
-            prompt_id = "unknown"
-            
-            # 尝试从extra_pnginfo获取client_id
-            if extra_pnginfo is not None and "workflow" in extra_pnginfo:
-                if "execution_id" in extra_pnginfo["workflow"]:
-                    prompt_id = extra_pnginfo["workflow"]["execution_id"]
-                elif "client_id" in extra_pnginfo["workflow"]:
-                    prompt_id = extra_pnginfo["workflow"]["client_id"]
-            
             # 准备基本信息
             image_info = {
                 "image_count": len(images),
@@ -48,26 +39,21 @@ class WebhookNotifierNode:
             except json.JSONDecodeError:
                 extra_info = {}
             
-            # 准备hidden参数数据
-            hidden_data = {}
-            
-            # 添加extra_pnginfo参数
-            if extra_pnginfo is not None:
-                hidden_data["extra_pnginfo"] = extra_pnginfo
-            
             # 构造payload
             payload = {
                 "status": "completed",
-                "prompt_id": prompt_id,
-                "workflow_name": workflow_name,
                 "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "images": image_info,
-                "hidden_params": hidden_data,
+                "unique_id": unique_id,
+                "prompt": prompt,
+                "extra_pnginfo": extra_pnginfo,
                 **extra_info
             }
             
             # 调试信息
             print(f"Debug - 获取到的hidden参数:")
+            print(f"- unique_id: {unique_id}")
+            print(f"- prompt: {type(prompt)}")
             print(f"- extra_pnginfo: {type(extra_pnginfo)}")
             
             # 发送webhook
@@ -80,10 +66,10 @@ class WebhookNotifierNode:
             if response.status_code >= 400:
                 print(f"Webhook通知失败: {response.status_code} - {response.text}")
             else:
-                print(f"Webhook通知成功: {response.status_code}, prompt_id: {prompt_id}")
+                print(f"Webhook通知成功: {response.status_code}")
                 
         except Exception as e:
             print(f"发送webhook时出错: {str(e)}")
         
-        # 返回原始图像
-        return (images,) 
+        # 不返回任何内容
+        return () 
