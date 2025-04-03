@@ -1,36 +1,6 @@
 import requests
 import json
-import os
 import time
-
-# 加载配置文件
-def load_config():
-    config_path = os.path.join(os.path.dirname(__file__), "config.json")
-    default_config = {
-        "default_webhook_url": "https://example.com/webhook",
-        "enable_debug_logs": True
-    }
-    
-    try:
-        if os.path.exists(config_path):
-            with open(config_path, "r") as f:
-                config = json.load(f)
-                # 确保config中包含必要的字段
-                for key, value in default_config.items():
-                    if key not in config:
-                        config[key] = value
-                return config
-        else:
-            # 如果配置文件不存在，创建一个默认配置
-            with open(config_path, "w") as f:
-                json.dump(default_config, f, indent=4)
-            return default_config
-    except Exception as e:
-        print(f"加载配置文件出错: {str(e)}")
-        return default_config
-
-# 全局配置
-CONFIG = load_config()
 
 class WebhookNotifierNode:
     @classmethod
@@ -38,7 +8,7 @@ class WebhookNotifierNode:
         return {
             "required": {
                 "images": ("IMAGE",),
-                "webhook_url": ("STRING", {"default": CONFIG.get("default_webhook_url", "https://example.com/webhook")})
+                "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {
                 "workflow_name": ("STRING", {"default": "默认工作流"}),
