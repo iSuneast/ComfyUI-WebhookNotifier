@@ -25,7 +25,7 @@ class WebhookNotifierNode:
     FUNCTION = "notify"
     CATEGORY = "utils"
 
-    def notify(self, images, webhook_url, additional_info="{}", extra_pnginfo=None, unique_id=None, prompt=None):
+    def notify(self, images, webhook_url, additional_info="{}", unique_id=None, prompt=None, extra_pnginfo=None):
         try:
             # 准备基本信息
             image_info = {
