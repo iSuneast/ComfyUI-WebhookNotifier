@@ -14,9 +14,6 @@ class WebhookNotifierNode:
                 "additional_info": ("STRING", {"default": "{}", "multiline": True})
             },
             "hidden": {
-                "unique_id": "UNIQUE_ID",
-                "prompt": "PROMPT", 
-                "extra_pnginfo": "EXTRA_PNGINFO"
             }
         }
 
@@ -27,14 +24,8 @@ class WebhookNotifierNode:
     FUNCTION = "notify"
     CATEGORY = "utils"
 
-    def notify(self, images, webhook_url, additional_info="{}", unique_id=None, prompt=None, extra_pnginfo=None):
+    def notify(self, images, webhook_url, additional_info="{}"):
         try:
-            # 准备基本信息
-            image_info = {
-                "image_count": len(images),
-                "dimensions": f"{images.shape[1]}x{images.shape[2]}"
-            }
-            
             # 尝试解析额外信息
             try:
                 extra_info = json.loads(additional_info) if additional_info else {}
@@ -43,20 +34,8 @@ class WebhookNotifierNode:
             
             # 构造payload
             payload = {
-                "status": "completed",
-                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "images": image_info,
-                "unique_id": unique_id,
-                "prompt": prompt,
-                "extra_pnginfo": extra_pnginfo,
                 **extra_info
             }
-            
-            # 调试信息
-            print(f"Debug - 获取到的hidden参数:")
-            print(f"- unique_id: {unique_id}")
-            print(f"- prompt: {type(prompt)}")
-            print(f"- extra_pnginfo: {type(extra_pnginfo)}")
             
             # 发送webhook
             response = requests.post(
