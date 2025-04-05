@@ -5,9 +5,7 @@ Webhook notification plugin for ComfyUI, used to send webhook notifications when
 ## Features
 
 - Automatically sends webhook notifications after generating images
-- Notifications include basic information such as image count, dimensions, etc.
-- Supports passing ComfyUI's unique_id, prompt, and extra_pnginfo
-- Can add custom additional information
+- Supports custom JSON data in notifications
 - Simple to use, just connect to the image output
 
 ## Installation
@@ -38,40 +36,28 @@ Parameter description:
 
 ## Webhook Notification Format
 
-Example of data format sent by the WebhookNotifier node:
+The WebhookNotifier node sends the contents of the `additional_info` parameter as the JSON payload. For example, if you provide the following in the additional_info field:
 
 ```json
 {
   "status": "completed",
-  "timestamp": "2023-04-03 15:30:45",
-  "images": {
-    "image_count": 1,
-    "dimensions": "512x512"
-  },
-  "unique_id": "12345678-1234-5678-abcd-1234567890ab",
-  "prompt": {...},
-  "extra_pnginfo": {...},
   "custom_field1": "Custom value 1",
   "custom_field2": "Custom value 2"
 }
 ```
 
-Where:
-- `status`: Always "completed", indicating the task is finished
-- `timestamp`: Timestamp of when the task completed
-- `images`: Contains image count and dimension information
-- `unique_id`: ComfyUI's task ID
-- `prompt`: Complete prompt information from ComfyUI
-- `extra_pnginfo`: Additional PNG information from ComfyUI
-- Other fields: Custom fields from the additional_info parameter
+This exact JSON will be sent to the webhook URL. If the additional_info field is left empty or contains invalid JSON, an empty JSON object `{}` will be sent.
 
 ## Example
 
-Connect the output of an image generation node to the WebhookNotifier node's images input, set your webhook URL, and you will receive notifications when image generation is complete.
+Connect the output of an image generation node to the WebhookNotifier node's images input, set your webhook URL, and optionally provide additional information in JSON format. When image generation is complete, the node will send a POST request to the specified webhook URL.
 
 ## Debugging
 
-The node prints debug information, including whether the webhook notification was sent successfully and the status of received hidden parameters.
+The node prints debug information to the console, including whether the webhook notification was sent successfully:
+- "Webhook notification successful: [status code]" for successful requests
+- "Webhook notification failed: [status code] - [response text]" for failed requests
+- "Error sending webhook: [error message]" for exceptions
 
 ## License
 
