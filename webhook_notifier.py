@@ -20,6 +20,8 @@ class WebhookNotifierNode:
             }
         }
 
+    OUTPUT_NODE = True
+
     RETURN_TYPES = ()
     RETURN_NAMES = ()
     FUNCTION = "notify"
