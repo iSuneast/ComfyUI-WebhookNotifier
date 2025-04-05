@@ -26,18 +26,18 @@ class WebhookNotifierNode:
 
     def notify(self, images, webhook_url, additional_info="{}"):
         try:
-            # 尝试解析额外信息
+            # Try to parse additional information
             try:
                 extra_info = json.loads(additional_info) if additional_info else {}
             except json.JSONDecodeError:
                 extra_info = {}
             
-            # 构造payload
+            # Construct payload
             payload = {
                 **extra_info
             }
             
-            # 发送webhook
+            # Send webhook
             response = requests.post(
                 webhook_url,
                 json=payload,
@@ -45,12 +45,12 @@ class WebhookNotifierNode:
             )
             
             if response.status_code >= 400:
-                print(f"Webhook通知失败: {response.status_code} - {response.text}")
+                print(f"Webhook notification failed: {response.status_code} - {response.text}")
             else:
-                print(f"Webhook通知成功: {response.status_code}")
+                print(f"Webhook notification successful: {response.status_code}")
                 
         except Exception as e:
-            print(f"发送webhook时出错: {str(e)}")
+            print(f"Error sending webhook: {str(e)}")
         
-        # 不返回任何内容
+        # No return value
         return () 
