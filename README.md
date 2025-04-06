@@ -13,8 +13,8 @@ Webhook notification plugin for ComfyUI, used to send webhook notifications when
 1. Clone this repository to ComfyUI's `custom_nodes` directory:
 
 ```bash
-cd /path/to/ComfyUI/custom_nodes
-git clone https://github.com/yourusername/ComfyUI-WebhookNotifier.git
+cd ComfyUI/custom_nodes
+git clone https://github.com/iSuneast/ComfyUI-WebhookNotifier.git
 ```
 
 2. Install dependencies:
@@ -36,7 +36,9 @@ Parameter description:
 
 ## Webhook Notification Format
 
-The WebhookNotifier node sends the contents of the `additional_info` parameter as the JSON payload. For example, if you provide the following in the additional_info field:
+The WebhookNotifier node sends the contents of the `additional_info` parameter as the JSON payload. **Note that the image data itself is not included in the webhook payload**. The node only requires the image input to trigger the notification when image generation is complete.
+
+For example, if you provide the following in the additional_info field:
 
 ```json
 {
@@ -50,14 +52,16 @@ This exact JSON will be sent to the webhook URL. If the additional_info field is
 
 ## Example
 
-Connect the output of an image generation node to the WebhookNotifier node's images input, set your webhook URL, and optionally provide additional information in JSON format. When image generation is complete, the node will send a POST request to the specified webhook URL.
+Connect the output of an image generation node to the WebhookNotifier node's images input, set your webhook URL, and optionally provide additional information in JSON format. When image generation is complete, the node will send a POST request to the specified webhook URL with your custom data.
 
 ## Debugging
 
 The node prints debug information to the console, including whether the webhook notification was sent successfully:
+- "Webhook notification started in background" when the webhook thread is started
 - "Webhook notification successful: [status code]" for successful requests
 - "Webhook notification failed: [status code] - [response text]" for failed requests
 - "Error sending webhook: [error message]" for exceptions
+- "Error preparing webhook: [error message]" if there are errors before sending
 
 ## License
 
@@ -65,4 +69,4 @@ MIT
 
 ## Contributions
 
-Issues and pull requests are welcome! 
+Issues and pull requests are welcome!
