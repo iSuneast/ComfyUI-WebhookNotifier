@@ -1,0 +1,15 @@
+[project]
+name = "webhooknotifier"
+description = "The Webhook Notification plugin for ComfyUI, used to send webhook notifications when image generation is complete."
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["requests>=2.27.0"]
+
+[project.urls]
+Repository = "https://github.com/iSuneast/ComfyUI-WebhookNotifier"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-WebhookNotifier"
+Icon = ""
