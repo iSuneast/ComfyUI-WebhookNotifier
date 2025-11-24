@@ -8,7 +8,7 @@ class WebhookNotifierNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE",),
+                "images": ("*",),
                 "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {

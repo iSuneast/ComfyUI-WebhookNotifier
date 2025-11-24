@@ -6,7 +6,7 @@ Webhook notification plugin for ComfyUI, used to send webhook notifications when
 
 - Automatically sends webhook notifications after generating images
 - Supports custom JSON data in notifications
-- Simple to use, just connect to the image output
+- Simple to use, just connect to any node output as a trigger (no restriction on data type)
 
 ## Installation
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 The plugin provides a Webhook Notifier node that can be connected to image output to send notifications when generation is complete.
 
 Parameter description:
-- `images`: Input images (required, connect to the output of an image generation node)
+- `images`: Generic trigger input (required, can connect to the output of any node; the data is **not** read or sent, only used as a trigger)
 - `webhook_url`: Webhook URL address (required, default is "https://example.com/webhook")
 - `additional_info`: Additional information in JSON format (optional, default is empty)
 
