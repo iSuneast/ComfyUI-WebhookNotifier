@@ -6,7 +6,7 @@ Webhook notification plugin for ComfyUI, used to send webhook notifications when
 
 - Automatically sends webhook notifications after generating images
 - Supports custom JSON data in notifications
-- Simple to use, just connect to any node output as a trigger (no restriction on data type)
+- Simple to use, just connect to an `IMAGE` output or `VHS_FILENAMES` output as a trigger (the actual data is ignored)
 
 ## Installation
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 The plugin provides a Webhook Notifier node that can be connected to image output to send notifications when generation is complete.
 
 Parameter description:
-- `images`: Generic trigger input (required, can connect to the output of any node; the data is **not** read or sent, only used as a trigger)
+- `images`: Trigger input (required, can connect to an `IMAGE` output or a `VHS_FILENAMES` output; the data is **not** read or sent, only used as a trigger)
 - `webhook_url`: Webhook URL address (required, default is "https://example.com/webhook")
 - `additional_info`: Additional information in JSON format (optional, default is empty)
 
@@ -52,7 +52,7 @@ This exact JSON will be sent to the webhook URL. If the additional_info field is
 
 ## Example
 
-Connect the output of an image generation node to the WebhookNotifier node's images input, set your webhook URL, and optionally provide additional information in JSON format. When image generation is complete, the node will send a POST request to the specified webhook URL with your custom data.
+Connect the output of an image generation node (type `IMAGE`) or a VHS/VideoHelperSuite node (type `VHS_FILENAMES`) to the WebhookNotifier node's `images` input, set your webhook URL, and optionally provide additional information in JSON format. When generation is complete and this node is executed, it will send a POST request to the specified webhook URL with your custom data.
 
 ## Debugging
 

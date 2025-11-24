@@ -8,7 +8,8 @@ class WebhookNotifierNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("*",),
+                # 接收图像结果或 VHS 节点输出的文件名列表，用于作为触发输入
+                "images": ("IMAGE", "VHS_FILENAMES"),
                 "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {
