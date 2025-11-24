@@ -6,7 +6,9 @@ Webhook notification plugin for ComfyUI, used to send webhook notifications when
 
 - Automatically sends webhook notifications after generating images
 - Supports custom JSON data in notifications
-- Simple to use, just connect to an `IMAGE` output or `VHS_FILENAMES` output as a trigger (the actual data is ignored)
+- Provides two nodes:
+  - `Webhook Notifier`: connect to an `IMAGE` output as a trigger
+  - `Webhook Notifier (VHS)`: connect to a `VHS_FILENAMES` output as a trigger
 
 ## Installation
 
