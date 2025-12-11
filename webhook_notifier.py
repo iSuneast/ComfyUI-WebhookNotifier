@@ -7,6 +7,11 @@ def send_webhook_request(webhook_url, payload):
     """
     发送 webhook 请求的通用函数，供各个节点复用。
     """
+    # 如果 webhook_url 为空或仅包含空白字符，则直接返回，不发送请求
+    if not webhook_url or not str(webhook_url).strip():
+        print("Webhook URL is empty, skip sending webhook.")
+        return
+
     try:
         response = requests.post(
             webhook_url,
