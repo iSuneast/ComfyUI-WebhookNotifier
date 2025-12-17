@@ -31,11 +31,11 @@ class WebhookNotifierNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                # 接收图像结果，用于作为触发输入
-                "images": ("IMAGE",),
                 "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {
+                # 通配符，接受任意类型作为触发输入
+                "any_input": ("*",),
                 "additional_info": ("STRING", {"default": "{}", "multiline": True})
             },
             "hidden": {
@@ -49,7 +49,7 @@ class WebhookNotifierNode:
     FUNCTION = "notify"
     CATEGORY = "utils"
 
-    def notify(self, images, webhook_url, additional_info="{}"):
+    def notify(self, webhook_url, any_input=None, additional_info="{}"):
         try:
             # Try to parse additional information
             try:
@@ -75,54 +75,3 @@ class WebhookNotifierNode:
         
         # No return value
         return () 
-
-
-class WebhookNotifierVHSNode:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                # 接收 VHS/VideoHelperSuite 等节点输出的文件名列表，用于作为触发输入
-                "vhs_filenames": ("VHS_FILENAMES",),
-                "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
-            },
-            "optional": {
-                "additional_info": ("STRING", {"default": "{}", "multiline": True})
-            },
-            "hidden": {
-            }
-        }
-
-    OUTPUT_NODE = True
-
-    RETURN_TYPES = ()
-    RETURN_NAMES = ()
-    FUNCTION = "notify"
-    CATEGORY = "utils"
-
-    def notify(self, vhs_filenames, webhook_url, additional_info="{}"):
-        try:
-            # 解析附加信息
-            try:
-                extra_info = json.loads(additional_info) if additional_info else {}
-            except json.JSONDecodeError:
-                extra_info = {}
-            
-            # 构建 payload（默认不发送具体文件名，仅作为触发）
-            payload = {
-                **extra_info
-            }
-            
-            # 在后台线程中发送 webhook
-            threading.Thread(
-                target=send_webhook_request, 
-                args=(webhook_url, payload),
-                daemon=True
-            ).start()
-            print("Webhook notification (VHS) started in background")
-                
-        except Exception as e:
-            print(f"Error preparing webhook (VHS): {str(e)}")
-        
-        # 无返回值
-        return ()

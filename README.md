@@ -1,14 +1,12 @@
 # ComfyUI-WebhookNotifier
 
-Webhook notification plugin for ComfyUI, used to send webhook notifications when image generation is completed.
+Webhook notification plugin for ComfyUI, used to send webhook notifications when workflow execution is completed.
 
 ## Features
 
-- Automatically sends webhook notifications after generating images
+- Automatically sends webhook notifications after workflow execution
 - Supports custom JSON data in notifications
-- Provides two nodes:
-  - `Webhook Notifier`: connect to an `IMAGE` output as a trigger
-  - `Webhook Notifier (VHS)`: connect to a `VHS_FILENAMES` output as a trigger
+- Accepts any input type as trigger (IMAGE, STRING, LATENT, VHS_FILENAMES, etc.)
 
 ## Installation
 
@@ -29,16 +27,16 @@ pip install -r requirements.txt
 
 ## Usage
 
-The plugin provides a Webhook Notifier node that can be connected to image output to send notifications when generation is complete.
+The plugin provides a Webhook Notifier node that can be connected to any output to send notifications when execution is complete.
 
 Parameter description:
-- `images`: Trigger input (required, can connect to an `IMAGE` output or a `VHS_FILENAMES` output; the data is **not** read or sent, only used as a trigger)
 - `webhook_url`: Webhook URL address (required, default is "https://example.com/webhook")
+- `any_input`: Trigger input (optional, accepts any type such as IMAGE, STRING, LATENT, VHS_FILENAMES, etc.; the data is **not** read or sent, only used as a trigger)
 - `additional_info`: Additional information in JSON format (optional, default is empty)
 
 ## Webhook Notification Format
 
-The WebhookNotifier node sends the contents of the `additional_info` parameter as the JSON payload. **Note that the image data itself is not included in the webhook payload**. The node only requires the image input to trigger the notification when image generation is complete.
+The WebhookNotifier node sends the contents of the `additional_info` parameter as the JSON payload. **Note that the input data itself is not included in the webhook payload**. The node only requires the `any_input` connection to trigger the notification when execution is complete.
 
 For example, if you provide the following in the additional_info field:
 
@@ -54,7 +52,7 @@ This exact JSON will be sent to the webhook URL. If the additional_info field is
 
 ## Example
 
-Connect the output of an image generation node (type `IMAGE`) or a VHS/VideoHelperSuite node (type `VHS_FILENAMES`) to the WebhookNotifier node's `images` input, set your webhook URL, and optionally provide additional information in JSON format. When generation is complete and this node is executed, it will send a POST request to the specified webhook URL with your custom data.
+Connect any output (IMAGE, STRING, LATENT, VHS_FILENAMES, etc.) to the WebhookNotifier node's `any_input`, set your webhook URL, and optionally provide additional information in JSON format. When the upstream node completes execution, the webhook will send a POST request to the specified URL with your custom data.
 
 ## Debugging
 
