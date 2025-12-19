@@ -31,11 +31,11 @@ class WebhookNotifierNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
+                # 接收图像结果，用于作为触发输入
+                "images": ("IMAGE",),
                 "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {
-                # 通配符，接受任意类型作为触发输入
-                "any_input": ("*",),
                 "additional_info": ("STRING", {"default": "{}", "multiline": True})
             },
             "hidden": {
@@ -49,7 +49,7 @@ class WebhookNotifierNode:
     FUNCTION = "notify"
     CATEGORY = "utils"
 
-    def notify(self, webhook_url, any_input=None, additional_info="{}"):
+    def notify(self, images, webhook_url, additional_info="{}"):
         try:
             # Try to parse additional information
             try:
@@ -74,4 +74,55 @@ class WebhookNotifierNode:
             print(f"Error preparing webhook: {str(e)}")
         
         # No return value
-        return () 
+        return ()
+
+
+class WebhookNotifierAnyNode:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                # 通配符，接受任意类型作为触发输入
+                "any_input": ("*",),
+                "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
+            },
+            "optional": {
+                "additional_info": ("STRING", {"default": "{}", "multiline": True})
+            },
+            "hidden": {
+            }
+        }
+
+    OUTPUT_NODE = True
+
+    RETURN_TYPES = ()
+    RETURN_NAMES = ()
+    FUNCTION = "notify"
+    CATEGORY = "utils"
+
+    def notify(self, any_input, webhook_url, additional_info="{}"):
+        try:
+            # Try to parse additional information
+            try:
+                extra_info = json.loads(additional_info) if additional_info else {}
+            except json.JSONDecodeError:
+                extra_info = {}
+            
+            # Construct payload
+            payload = {
+                **extra_info
+            }
+            
+            # Start the webhook sending in a background thread
+            threading.Thread(
+                target=send_webhook_request, 
+                args=(webhook_url, payload),
+                daemon=True
+            ).start()
+            print("Webhook notification started in background")
+                
+        except Exception as e:
+            print(f"Error preparing webhook: {str(e)}")
+        
+        # No return value
+        return ()

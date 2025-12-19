@@ -6,7 +6,9 @@ Webhook notification plugin for ComfyUI, used to send webhook notifications when
 
 - Automatically sends webhook notifications after workflow execution
 - Supports custom JSON data in notifications
-- Accepts any input type as trigger (IMAGE, STRING, LATENT, VHS_FILENAMES, etc.)
+- Provides two nodes:
+  - `Webhook Notifier`: connects to an `IMAGE` output as trigger
+  - `Webhook Notifier (Any)`: accepts any input type as trigger (IMAGE, STRING, LATENT, VHS_FILENAMES, etc.)
 
 ## Installation
 
@@ -27,11 +29,24 @@ pip install -r requirements.txt
 
 ## Usage
 
-The plugin provides a Webhook Notifier node that can be connected to any output to send notifications when execution is complete.
+The plugin provides two Webhook Notifier nodes:
 
-Parameter description:
+### Webhook Notifier
+
+Connects to an `IMAGE` output to send notifications when image generation is complete.
+
+Parameters:
+- `images`: Trigger input (required, connects to an `IMAGE` output; the data is **not** read or sent, only used as a trigger)
 - `webhook_url`: Webhook URL address (required, default is "https://example.com/webhook")
-- `any_input`: Trigger input (optional, accepts any type such as IMAGE, STRING, LATENT, VHS_FILENAMES, etc.; the data is **not** read or sent, only used as a trigger)
+- `additional_info`: Additional information in JSON format (optional, default is empty)
+
+### Webhook Notifier (Any)
+
+Accepts any input type to send notifications when execution is complete.
+
+Parameters:
+- `any_input`: Trigger input (required, accepts any type such as IMAGE, STRING, LATENT, VHS_FILENAMES, etc.; the data is **not** read or sent, only used as a trigger)
+- `webhook_url`: Webhook URL address (required, default is "https://example.com/webhook")
 - `additional_info`: Additional information in JSON format (optional, default is empty)
 
 ## Webhook Notification Format
@@ -52,7 +67,10 @@ This exact JSON will be sent to the webhook URL. If the additional_info field is
 
 ## Example
 
-Connect any output (IMAGE, STRING, LATENT, VHS_FILENAMES, etc.) to the WebhookNotifier node's `any_input`, set your webhook URL, and optionally provide additional information in JSON format. When the upstream node completes execution, the webhook will send a POST request to the specified URL with your custom data.
+- **Webhook Notifier**: Connect an image output to the `images` input, set your webhook URL, and optionally provide additional information in JSON format.
+- **Webhook Notifier (Any)**: Connect any output (IMAGE, STRING, LATENT, VHS_FILENAMES, etc.) to the `any_input`, set your webhook URL, and optionally provide additional information.
+
+When the upstream node completes execution, the webhook will send a POST request to the specified URL with your custom data.
 
 ## Debugging
 
