@@ -83,7 +83,7 @@ class WebhookNotifierAnyNode:
         return {
             "required": {
                 # 通配符，接受任意类型作为触发输入
-                "any_input": ("*",),
+                "any_input": ("*", {"forceInput": True}),
                 "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {
