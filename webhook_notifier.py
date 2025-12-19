@@ -3,6 +3,16 @@ import json
 import threading
 
 
+class AnyType(str):
+    """自定义类型，用于接受任意输入类型"""
+    def __ne__(self, __value: object) -> bool:
+        return False
+
+
+# 创建一个 AnyType 实例，用于类型定义
+ANY = AnyType("*")
+
+
 def send_webhook_request(webhook_url, payload):
     """
     发送 webhook 请求的通用函数，供各个节点复用。
@@ -83,7 +93,7 @@ class WebhookNotifierAnyNode:
         return {
             "required": {
                 # 通配符，接受任意类型作为触发输入
-                "any_input": ("*", {"forceInput": True}),
+                "any_input": (ANY, {"forceInput": True}),
                 "webhook_url": ("STRING", {"default": "https://example.com/webhook"})
             },
             "optional": {
